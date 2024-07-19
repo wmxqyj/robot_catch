@@ -181,7 +181,7 @@ def forward_kinematics(deg1, deg2, deg3, deg4):
     return valid, x, y, z
 
 
-def ok(x, y, z):
+def descartes2joint(x, y, z):
     valid, deg1, deg2, deg3, deg4 = backward_kinematics(x, y, z, alpha=180)
     if valid:
         valid, x1, y1, z1 = forward_kinematics(deg1, deg2, deg3, deg4)
@@ -191,10 +191,9 @@ def ok(x, y, z):
             print('ok')
 
 
-
-if __name__ == '__main__':
-    x = 0
-    y = 10
-    z = 10
-    ok(x, y, z)
-    print('done')
+# if __name__ == '__main__':
+#     x = 0
+#     y = 10
+#     z = 10
+#     descartes2joint(x, y, z)
+#     print('done')
