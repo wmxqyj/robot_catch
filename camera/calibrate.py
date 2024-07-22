@@ -31,17 +31,17 @@ print(1 + (workspace_limits[0][1] - workspace_limits[0][0])/calib_grid_step)
 gridspace_x = np.linspace(workspace_limits[0][0], workspace_limits[0][1], int(1 + (workspace_limits[0][1] - workspace_limits[0][0])/calib_grid_step))
 gridspace_y = np.linspace(workspace_limits[1][0], workspace_limits[1][1], int(1 + (workspace_limits[1][1] - workspace_limits[1][0])/calib_grid_step))
 gridspace_z = np.linspace(workspace_limits[2][0], workspace_limits[2][1], int(1 + (workspace_limits[2][1] - workspace_limits[2][0])/calib_grid_step))
-calib_grid_x, calib_grid_y, calib_grid_z = np.meshgrid(gridspace_x, gridspace_y, gridspace_z)
-num_calib_grid_pts = calib_grid_x.shape[0]*calib_grid_x.shape[1]*calib_grid_x.shape[2]
+calib_grid_x, calib_grid_y, calib_grid_z = np.meshgrid(gridspace_x, gridspace_y, gridspace_z)   # calib_grid_xx中的每个元素表示对应位置的x的坐标
+num_calib_grid_pts = calib_grid_x.shape[0]*calib_grid_x.shape[1]*calib_grid_x.shape[2]              # 返回三维网格中的总点数，共125个
 
 calib_grid_x.shape = (num_calib_grid_pts,1)
 calib_grid_y.shape = (num_calib_grid_pts,1)
-calib_grid_z.shape = (num_calib_grid_pts,1)
-calib_grid_pts = np.concatenate((calib_grid_x, calib_grid_y, calib_grid_z), axis=1)
+calib_grid_z.shape = (num_calib_grid_pts,1)                                                         # 重塑数组转换由（5,5,5)的三维数组转化为(125,1)的二维数组
+calib_grid_pts = np.concatenate((calib_grid_x, calib_grid_y, calib_grid_z), axis=1)           # 从第一列开始拼接，生成(x,y,z)类型的三维坐标
 
-measured_pts = []
-observed_pts = []
-observed_pix = []
+measured_pts = []         # 测量点
+observed_pts = []         # 观测点
+observed_pix = []         # 观测到的像素值
 
 # Move robot to home pose    # TODO
 print('Connecting to robot...')
@@ -60,15 +60,15 @@ robot.move_j([-np.pi, -np.pi/2, np.pi/2, 0, np.pi/2, np.pi])
 # [0,-np.pi/2,0,-np.pi/2,0,0]
 # Move robot to each calibration point in workspace
 print('Collecting data...')
-for calib_pt_idx in range(num_calib_grid_pts):
-    tool_position = calib_grid_pts[calib_pt_idx,:]
+for calib_pt_idx in range(num_calib_grid_pts):                                     # 共有多少点，全部抽取出来依次排列
+    tool_position = calib_grid_pts[calib_pt_idx,:]                                 # 取出每一行的数据，即一个表示三维坐标的点
     tool_config = [tool_position[0],tool_position[1],tool_position[2],
-           tool_orientation[0],tool_orientation[1],tool_orientation[2]]
+           tool_orientation[0],tool_orientation[1],tool_orientation[2]]            # 形成完正的工具配置，表示工具的全部信息，包含(x,y,z,roll,pitch,yaw)
     tool_config1 = [tool_position[0], tool_position[1], tool_position[2],
                    tool_orientation[0], tool_orientation[1], tool_orientation[2]]
     print(f"tool position and orientation:{tool_config1}")
     robot.move_j_p(tool_config)
-    time.sleep(2)  # k
+    time.sleep(2)                                                                  # 停留2s，等待机械臂到达指定位置
     
     # Find checkerboard center
     checkerboard_size = (5,5)

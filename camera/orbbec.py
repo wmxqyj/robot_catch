@@ -3,8 +3,8 @@ import os
 import cv2
 import numpy as np
 
-from utils.pyorbbecsdk import *
-from utils.utils import frame_to_bgr_image
+from pyorbbecsdk import *
+from utils import *
 
 
 def save_depth_frame(frame: DepthFrame, index):
@@ -93,3 +93,18 @@ def get_camera_data():
             break
     return color_img, depth_img_data
 
+
+"""
+相机内参：
+    格式： [[fx,0,ppx],
+           [0,fy,ppy],
+           [0,0,1]]
+           可以通过标定获得：
+           mtx:
+ [[439.08239835   0.         321.42224963]
+ [  0.         439.22251104 244.41306463]
+ [  0.           0.           1.        ]]
+"""
+cam_intrinsics =[[439.08239835, 0, 321.42224963],
+              [0, 439.22251104, 244.41306463],
+              [0, 0, 1]]

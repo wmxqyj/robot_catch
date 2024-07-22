@@ -191,9 +191,9 @@ def descartes2joint(x, y, z):
             print('ok')
 
 
-# if __name__ == '__main__':
-#     x = 0
-#     y = 10
-#     z = 10
-#     descartes2joint(x, y, z)
-#     print('done')
+if __name__ == '__main__':
+    x = -7
+    y = 0
+    z = 5
+    descartes2joint(x, y, z)
+    print('done')
